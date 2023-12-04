@@ -1,0 +1,1 @@
+INSERT INTO users  (user_name, user_email, user_password, create_at) VALUES( 'jhon', 'jhon@mail.com', '12345678', now());

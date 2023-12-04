@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msvc-auth
+spec:
+  #Number of copies of Pods
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msvc-auth
+  template:
+    metadata:
+      labels:
+        app: msvc-auth
+    spec:
+      containers:
+      #Define the container that you need to deploy.
+      #Latest: it forces the deployment to download the latest version of the image.
+      - image: gporras/auth:latest
+        name: auth
+        ports:
+        - containerPort: 8001
+        #Enviroment var for Pod
+        env:
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+---
+#The service expose the deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: msvc-auth
+spec:
+  ports:
+    - port: 8001
+      protocol: TCP
+      targetPort: 8001
+  selector:
+    # Make a connection with the label metadata.labels.app
+    app: msvc-auth
+  type: LoadBalancer
