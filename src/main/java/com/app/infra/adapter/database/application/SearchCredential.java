@@ -1,5 +1,6 @@
 package com.app.infra.adapter.database.application;
 
+import com.app.domain.UserSignIn;
 import com.app.domain.UserSignUp;
 import com.app.domain.gateway.SearchUserGateway;
 import com.app.infra.adapter.database.domain.UserCredentialMapper;
@@ -17,6 +18,13 @@ public class SearchCredential implements SearchUserGateway {
     @Override
     public Mono<UserSignUp> findByEmail(UserSignUp signUp) {
         return repository.findByEmail(signUp.email().getValue())
+                .map(UserCredentialMapper::toModel);
+    }
+
+    @Override
+    public Mono<UserSignUp> findByEmailAndPassword(UserSignIn signUp) {
+        return repository.findByEmailAndPassword(signUp.email().getValue(),
+                        signUp.password().getValue())
                 .map(UserCredentialMapper::toModel);
     }
 }

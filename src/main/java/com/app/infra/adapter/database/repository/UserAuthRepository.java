@@ -8,4 +8,6 @@ import reactor.core.publisher.Mono;
 public interface UserAuthRepository extends ReactiveCrudRepository<UserCredentialsData, String> {
 
     Mono<UserCredentialsData> findByEmail(String email);
+    Mono<UserCredentialsData> findByEmailAndPassword(String email, String password);
+
 }
