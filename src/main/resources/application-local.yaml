@@ -17,5 +17,5 @@ logging:
   level:
     io:
       r2dbc:
-        h2: info
+        h2: trace
 

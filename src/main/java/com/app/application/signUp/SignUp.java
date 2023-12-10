@@ -19,14 +19,14 @@ public class SignUp {
     private final SaveUserGateway saveUserRepository;
     private final SearchUserGateway searchUserRepository;
 
-    public Mono<Void> addUser(String name, String password, String email) {
+    public Mono<Void> addUser(String name, String email, String password) {
 
-        return Mono.fromCallable(() -> UserSignUp.instanceOf(name, password, email))
+        return Mono.fromCallable(() -> UserSignUp.instanceOf(name,  email, password))
                 .flatMap(searchUserRepository::findByEmail)
                 .map(Optional::of)
                 .defaultIfEmpty(Optional.empty())
                 .flatMap(userOpt -> checkIsPresent(userOpt.isPresent())
-                            .thenReturn(UserSignUp.instanceOf(name, password, email)))
+                            .thenReturn(UserSignUp.instanceOf(name, email, password)))
                 .flatMap(saveUserRepository::save);
 
     }

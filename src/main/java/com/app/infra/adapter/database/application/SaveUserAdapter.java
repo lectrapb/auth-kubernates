@@ -18,6 +18,6 @@ public class SaveUserAdapter implements SaveUserGateway {
     public Mono<Void> save(UserSignUp userSignUp) {
 
         return   repository.save(toData(userSignUp))
-                .flatMap(userCredentialsData -> Mono.empty());
+                .flatMap(userCredentialsData ->Mono.empty());
     }
 }

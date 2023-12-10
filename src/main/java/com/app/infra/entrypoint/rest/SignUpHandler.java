@@ -27,8 +27,10 @@ public class SignUpHandler {
 
     public Mono<ServerResponse> signUp(ServerRequest request) {
 
-        Map<String, Object> envData = new HashMap<>();
-        envData.put("podinfo", env.getProperty("MY_POD_NAME"));
+        Map<String, Object> body = new HashMap<>();
+        body.put("podinfo", env.getProperty("MY_POD_NAME"));
+        body.put("podId", env.getProperty("MY_POD_IP"));
+        body.put("texto", env.getProperty("config.text"));
 
         return request.bodyToMono(SignUpRequest.class)
                 .flatMap(requestData -> signUp.addUser(requestData.getName(),
@@ -38,7 +40,7 @@ public class SignUpHandler {
                 .defaultIfEmpty(Optional.empty())
                 .flatMap(voidOptional -> ServerResponse
                         .status(HttpStatus.CREATED)
-                        .body(envData, Map.class))
+                            .body(Mono.just(body), Map.class))
                 .onErrorResume(throwable -> ServerResponse
                         .status(HttpStatus.BAD_REQUEST)
                         .body(Mono.just(throwable.getMessage()), String.class) );

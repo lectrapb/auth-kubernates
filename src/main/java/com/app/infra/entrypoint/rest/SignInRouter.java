@@ -14,6 +14,6 @@ public class SignInRouter {
 
     @Bean
     public RouterFunction<ServerResponse> router(SignInHandler handler){
-          return route(POST("/api/auth/signUp"),handler::signIn );
+          return route(POST("/api/auth/signIn"),handler::signIn );
     }
 }
