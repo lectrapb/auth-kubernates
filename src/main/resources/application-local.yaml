@@ -1,0 +1,21 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: msvc-auth
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
+    username: sa
+    password: password
+config:
+  text: "Configurando ambiente por defecto"
+logging:
+  level:
+    io:
+      r2dbc:
+        h2: info
+

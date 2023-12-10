@@ -1,10 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: msvc-auth
+data:
+  application.yaml: |
+    server:
+      port: 8001
+    spring:
+      application:
+        name: msvc-auth
+      data:
+        r2dbc:
+          repositories:
+            enabled: true
+      r2dbc:
+        url: r2dbc:h2:mem:///testdb
+        username: sa
+        password: password
+    config:
+      text: "Configurando ambiente por defecto"
+    logging:
+      level:
+        io:
+          r2dbc:
+            h2: trace
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: msvc-auth
 spec:
-  #Number of copies of Pods
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: msvc-auth
@@ -14,24 +41,39 @@ spec:
         app: msvc-auth
     spec:
       containers:
-      #Define the container that you need to deploy.
-      #Latest: it forces the deployment to download the latest version of the image.
-      - image: gporras/auth:latest
-        name: auth
-        ports:
-        - containerPort: 8001
-        #Enviroment var for Pod
-        env:
-          - name: MY_POD_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.podIP
-          - name: MY_POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
+        - name: auth-container
+          image: gporras/auth:latest
+          envFrom:
+            - configMapRef:
+                name: msvc-auth
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+            - name: config
+              mountPath: /home/appuser/config
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: SPRING_CONFIG_NAME
+              value: application
+            - name: SPRING_CONFIG_LOCATION
+              value: file:/home/appuser/config/
+      volumes:
+        - name: config
+          configMap:
+            name: msvc-auth
+        - name: tmp
+          emptyDir: {}
 ---
-#The service expose the deployment
 apiVersion: v1
 kind: Service
 metadata:
@@ -42,6 +84,5 @@ spec:
       protocol: TCP
       targetPort: 8001
   selector:
-    # Make a connection with the label metadata.labels.app
     app: msvc-auth
   type: LoadBalancer
