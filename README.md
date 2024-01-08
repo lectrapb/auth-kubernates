@@ -12,4 +12,5 @@ Today, Kubernetes is one of the most popular technologies used to deploy web ser
 ## Get started
 1. Use the command "minikube start". 
 2. Get into the folder deployment and use the command "kubectl apply -f deployment-auth.yaml".
-3. Use the command "kubectl get pods"
+3. Use the command "kubectl get pods".
+4. Import Postman <a href="https://github.com/lectrapb/auth-kubernates/tree/main/documentation/Postman">  collection </a> and test it!.
