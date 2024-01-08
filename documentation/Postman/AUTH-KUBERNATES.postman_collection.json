@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "7aedfb98-76da-4ab5-b8a6-59b8aed62ee7",
+		"name": "AUTH-KUBERNATES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8026786",
+		"_collection_link": "https://orange-zodiac-82819.postman.co/workspace/EstudioLocal~d5eb4c1a-be4b-4e8b-ba91-52c360a11e8e/collection/8026786-7aedfb98-76da-4ab5-b8a6-59b8aed62ee7?action=share&source=collection_link&creator=8026786"
+	},
+	"item": [
+		{
+			"name": "SignUp-kube",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Jhon\",  \n    \"email\": \"jhon@gmail.com\", \n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.58.2:31868/api/auth/sign-up",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"58",
+						"2"
+					],
+					"port": "31868",
+					"path": [
+						"api",
+						"auth",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignUp-local",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"Jhon\",  \n    \"email\": \"Jhon@gmail.com\", \n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/api/auth/sign-up",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"auth",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn-local",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"email\": \"Jhon@gmail.com\", \n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/api/auth/sign-in",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"api",
+						"auth",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn-kube",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"email\": \"Jhon@gmail.com\", \n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.58.2:31868/api/auth/sign-in",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"58",
+						"2"
+					],
+					"port": "31868",
+					"path": [
+						"api",
+						"auth",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
