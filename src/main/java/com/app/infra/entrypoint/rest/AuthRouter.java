@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class SignUpRouter {
+public class AuthRouter {
 
     @Bean
     public RouterFunction<ServerResponse> routes(AuthHandler handler){

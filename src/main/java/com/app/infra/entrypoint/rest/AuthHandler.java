@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
-public class SignUpHandler {
+public class AuthHandler {
 
 
     private final Environment env;
@@ -32,6 +32,7 @@ public class SignUpHandler {
         body.put("podinfo", env.getProperty("MY_POD_NAME"));
         body.put("podId", env.getProperty("MY_POD_IP"));
         body.put("texto", env.getProperty("config.text"));
+        body.put("response", "SignUp user successfully");
 
         return request.bodyToMono(SignUpRequest.class)
                 .flatMap(requestData -> signUp.addUser(requestData.getName(),
@@ -61,9 +62,13 @@ public class SignUpHandler {
                      var email = map.get("email").toString();
                      var password = map.get("password").toString();
                      return  signIn.verifyUser(email, password);
-                }).flatMap(isOk -> isOk ?
-                        ServerResponse.ok().body(Mono.just(body), Map.class):
-                        ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).body(Mono.just(body), Map.class));
+                }).flatMap(isOk -> {
+                    var response = isOk ?  "SignIn user successfully": "User not allowed";
+                    body.put("response", response);
+                    return isOk ?
+                            ServerResponse.ok().body(Mono.just(body), Map.class):
+                            ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).body(Mono.just(body), Map.class);
+                });
 
     }
 }
