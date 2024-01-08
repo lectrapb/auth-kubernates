@@ -13,6 +13,8 @@ public class SignUpRouter {
 
     @Bean
     public RouterFunction<ServerResponse> routes(SignUpHandler handler){
-        return route(POST("/api/auth/signUp"), handler::signUp);
+        return route().POST("/api/auth/sign-up", handler::signUp)
+                .POST("/api/auth/sign-in", handler::signIn)
+                .build();
     }
 }

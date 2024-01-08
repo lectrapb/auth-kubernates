@@ -1,10 +1,10 @@
 package com.app.infra.entrypoint.rest;
 
 
+import com.app.application.signIn.SignIn;
 import com.app.application.signUp.SignUp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,7 @@ public class SignUpHandler {
     private final Environment env;
 
     private final SignUp signUp;
+    private final SignIn signIn;
 
     public Mono<ServerResponse> signUp(ServerRequest request) {
 
@@ -46,7 +47,27 @@ public class SignUpHandler {
                         .body(Mono.just(throwable.getMessage()), String.class) );
 
     }
+
+
+    public Mono<ServerResponse> signIn(ServerRequest request){
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("podinfo", env.getProperty("MY_POD_NAME"));
+        body.put("podId", env.getProperty("MY_POD_IP"));
+        body.put("texto", env.getProperty("config.text"));
+
+        return  request.bodyToMono(Map.class)
+                .flatMap(map -> {
+                     var email = map.get("email").toString();
+                     var password = map.get("password").toString();
+                     return  signIn.verifyUser(email, password);
+                }).flatMap(isOk -> isOk ?
+                        ServerResponse.ok().body(Mono.just(body), Map.class):
+                        ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).body(Mono.just(body), Map.class));
+
+    }
 }
+
 
 @Data
 class SignUpRequest {
