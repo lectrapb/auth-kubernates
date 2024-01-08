@@ -18,7 +18,36 @@ data:
         username: sa
         password: password
     config:
-      text: "Configurando ambiente por defecto"
+      text: "Configure DEFAULT environment "
+    logging:
+      level:
+        io:
+          r2dbc:
+            h2: trace
+
+---
+#Production env vars
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: msvc-auth-pdn
+data:
+  application.yaml: |
+    server:
+      port: 8001
+    spring:
+      application:
+        name: msvc-auth
+      data:
+        r2dbc:
+          repositories:
+            enabled: true
+      r2dbc:
+        url: r2dbc:h2:mem:///testdb
+        username: sa
+        password: password
+    config:
+      text: "Configure PDN environment"
     logging:
       level:
         io:
@@ -31,7 +60,7 @@ kind: Deployment
 metadata:
   name: msvc-auth
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: msvc-auth
@@ -45,7 +74,7 @@ spec:
           image: gporras/auth:latest
           envFrom:
             - configMapRef:
-                name: msvc-auth
+                name: msvc-auth-pdn
           ports:
             - containerPort: 8001
           volumeMounts:
@@ -70,7 +99,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: msvc-auth
+            name: msvc-auth-pdn
         - name: tmp
           emptyDir: {}
 ---
