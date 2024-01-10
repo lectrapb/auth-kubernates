@@ -25,6 +25,22 @@ data:
         io:
           r2dbc:
             h2: trace
+    management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+    endpoint:
+      health:
+        probes:
+          enabled: true
+        show-details: always
+    health:
+      livenessstate:
+        enabled: true
+      readinessstate:
+        enabled: true
+
 
 ---
 #Production env vars
@@ -54,6 +70,22 @@ data:
         io:
           r2dbc:
             h2: trace
+    management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+    endpoint:
+      health:
+        probes:
+          enabled: true
+        show-details: always
+    health:
+      livenessstate:
+        enabled: true
+      readinessstate:
+        enabled: true
+
 
 ---
 apiVersion: apps/v1
@@ -97,6 +129,29 @@ spec:
               value: application
             - name: SPRING_CONFIG_LOCATION
               value: file:/home/appuser/config/
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8001
+              scheme: HTTP
+            initialDelaySeconds: 25
+            periodSeconds: 10
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8001
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 10
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "700m"
+            limits:
+              memory: "200Mi"
+              cpu: "1000m"
       volumes:
         - name: config
           configMap:
